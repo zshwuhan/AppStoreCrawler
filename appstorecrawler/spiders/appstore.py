@@ -33,7 +33,7 @@ class MySpider(CrawlSpider):
         item["Author"] = titles.xpath('//span[@itemprop="name"]/text()').extract()
         item["Filesize"] = titles.xpath('//ul[@class="list"]/li[5]/text()').extract()
 ##        item["Downloads"] = titles.xpath('//*[@itemprop="numDownloads"]/text()').extract()
-        item["Version"] = titles.xpath('//ul[@class="list"]/li[4]/text()').extract()
+        item["Version"] = titles.xpath('//*[@itemprop="softwareVersion"]/text()').extract()
         item["Compatibility"] = titles.xpath('//*[@itemprop="operatingSystem"]/text()').extract()
         item["Content_rating"] = titles.xpath('//*[@class="app-rating"]/a/text()').extract()
         item["Author_link"] = titles.xpath('//*[@class="app-links"]/a[1]/@href').extract()
