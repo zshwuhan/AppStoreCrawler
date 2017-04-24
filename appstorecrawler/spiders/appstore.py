@@ -6,9 +6,9 @@ import urlparse
 
 class MySpider(CrawlSpider):
   name = "appstore"
-  allowed_domains = ["play.google.com"]
-  start_urls = ["https://play.google.com/store/apps/"]
-  rules = [Rule(LinkExtractor(allow=(r'apps/details',),deny=(r'reviewId')),follow=True,callback='parse_link')]
+  allowed_domains = ["itunes.apple.com"]
+  start_urls = ["https://www.apple.com/itunes/charts/"]
+  rules = [Rule(LinkExtractor(allow=(r'/us/app/',)),follow=True,callback='parse_link')]
     	# r'page/\d+' : regular expression for http://isbullsh.it/page/X URLs
     	#Rule(LinkExtractor(allow=(r'apps')),follow=True,callback='parse_link')]
     	# r'\d{4}/\d{2}/\w+' : regular expression for http://isbullsh.it/YYYY/MM/title URLs
@@ -27,27 +27,28 @@ class MySpider(CrawlSpider):
       items = []
       for titles in titles :
         item = AppstorecrawlerItem()
-        item["Link"] = titles.xpath('/html/head/link[6]/@href').extract()
-        item["Item_name"] = titles.xpath('//*[@class="id-app-title"]/text()').extract()
+        item["Link"] = titles.xpath('//*[@rel="canonical"]/@href').extract()
+        item["Item_name"] = titles.xpath('//h1[@itemprop="name"]/text()').extract()
         item["Updated"] = titles.xpath('//*[@itemprop="datePublished"]/text()').extract()
-        item["Author"] = titles.xpath('//*[@itemprop="author"]/a[1]/span/text()').extract()
-        item["Filesize"] = titles.xpath('//*[@itemprop="fileSize"]/text()').extract()
-        item["Downloads"] = titles.xpath('//*[@itemprop="numDownloads"]/text()').extract()
-        item["Version"] = titles.xpath('//*[@itemprop="softwareVersion"]/text()').extract()
-        item["Compatibility"] = titles.xpath('//*[@itemprop="operatingSystems"]/text()').extract()
-        item["Content_rating"] = titles.xpath('//*[@itemprop="contentRating"]/text()').extract()
-        item["Author_link"] = titles.xpath('//*[@class="content contains-text-link"]/a[1]/@href').extract()
+        item["Author"] = titles.xpath('//span[@itemprop="name"]/text()').extract()
+        item["Filesize"] = titles.xpath('//ul[@class="list"]/li[5]/text()').extract()
+##        item["Downloads"] = titles.xpath('//*[@itemprop="numDownloads"]/text()').extract()
+        item["Version"] = titles.xpath('//ul[@class="list"]/li[4]/text()').extract()
+        item["Compatibility"] = titles.xpath('//*[@itemprop="operatingSystem"]/text()').extract()
+        item["Content_rating"] = titles.xpath('//*[@class="app-rating"]/a/text()').extract()
+        item["Author_link"] = titles.xpath('//*[@class="app-links"]/a[1]/@href').extract()
 ##        item["Author_link_test"] = titles.select('//*[@class="content contains-text-link"]/a/@href').extract()
-        item["Genre"] = titles.xpath('//*[@itemprop="genre"]/text()').extract()
-        item["Price"] = titles.xpath('//*[@class="price buy id-track-click id-track-impression"]/jsl/span/text()').extract()
-        item["Rating_value"] = titles.xpath('//*[@class="score"]/text()').extract()
-        item["Review_number"] = titles.xpath('//*[@class="rating-count"]/text()').extract()
-##        item["Description"] = response.xpath('//*[@]/text()').extract()
-        item["IAP"] = titles.xpath('//*[@class="inapp-msg"]/text()').extract()
-        item["Developer_badge"] = titles.xpath('//*[@class="badge-title"]//text()').extract()
-        item["Physical_address"] = titles.xpath('//*[@class="content physical-address"]/text()').extract()
-        item["Video_URL"] = titles.xpath('//*[@class="play-action-container"]/@data-video-url').extract()
-        item["Developer_ID"] = titles.xpath('//*[@itemprop="author"]/a[1]/@href').extract()
+        item["Genre"] = titles.xpath('//*[@itemprop="applicationCategory"]/text()').extract()
+        item["Price"] = titles.xpath('//*[@itemprop="price"]/text()').extract()
+        item["Rating_value"] = titles.xpath('//*[@class="extra-list customer-ratings"]/div[@class="rating"]/span[1]/text()').extract()
+        item["Rating_count"] = titles.xpath('//*[@class="extra-list customer-ratings"]/div[@class="rating"]/span[2]/text()').extract()
+        item["Description"] = response.xpath('//*[@itemprop="description"]/text()').extract()
+        item["Language"] = response.xpath('//*[@class="language"]/text()').extract()
+##        item["IAP"] = titles.xpath('//*[@class="inapp-msg"]/text()').extract()
+##        item["Developer_badge"] = titles.xpath('//*[@class="badge-title"]//text()').extract()
+##        item["Physical_address"] = titles.xpath('//*[@class="content physical-address"]/text()').extract()
+##        item["Video_URL"] = titles.xpath('//*[@class="play-action-container"]/@data-video-url').extract()
+##        item["Developer_ID"] = titles.xpath('//*[@itemprop="author"]/a[1]/@href').extract()
         items.append(item)
       return items
       
