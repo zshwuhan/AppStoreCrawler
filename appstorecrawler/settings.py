@@ -35,3 +35,8 @@ MONGODB_DB = "applestore"
 MONGODB_COLLECTION = "metadata"
 
 #DOWNLOAD_DELAY = 0.5
+
+DOWNLOADER_MIDDLEWARES = {
+    'scrapyproduct.middlewares.ProxyMiddleware': 1,
+    'scrapyproduct.middlewares.DelayAfterConnectionRefusedMiddleware': 510,
+}
