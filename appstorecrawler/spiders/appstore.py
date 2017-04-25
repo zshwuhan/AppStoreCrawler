@@ -23,6 +23,8 @@ class MySpider(CrawlSpider):
     
   def parse_link(self,response):
       hxs = Selector(response)
+      #if not hxs.xpath('//*[@class="ac-gn-link ac-gn-link-apple"]/@href'):
+      #  yield Request(url=response.url, dont_filter=True)
       titles = hxs.xpath('/html')
       items = []
       for titles in titles :
